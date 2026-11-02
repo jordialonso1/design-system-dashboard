@@ -1,0 +1,248 @@
+{
+  "timestamp": "2026-11-02T18:01:54.359Z",
+  "figma": [
+    {
+      "fileKey": "TuxClC4JIItgCYAZiafQBt",
+      "fileName": "Design System Pintxo",
+      "componentCount": 48,
+      "iconAssetCount": 6,
+      "styleCount": 35,
+      "lastModified": "2026-11-02T17:08:32Z",
+      "version": "2417312645874121014",
+      "branches": [
+        {
+          "key": "CRYA1iOW13vhEideZKUKQ4",
+          "name": "Card background colors",
+          "lastModified": "2026-10-08T12:21:17Z",
+          "createdByHandle": "Anna Cieślak",
+          "lastEditedByHandle": "Anna Cieślak",
+          "lastEditedAt": "2026-07-20T11:07:33.423Z",
+          "createdAt": "2026-06-25T09:30:57Z"
+        },
+        {
+          "key": "HqwE0tZg57OwUSYGURz08N",
+          "name": "locationPin updates - 3.08",
+          "lastModified": "2026-10-08T12:21:17Z",
+          "createdByHandle": "Jack Coles",
+          "lastEditedByHandle": "Jack Coles",
+          "lastEditedAt": "2026-09-28T14:23:09.963Z",
+          "createdAt": "2026-08-03T08:47:29Z"
+        },
+        {
+          "key": "8WqjHFu81c4GFkiNJhyO9z",
+          "name": "tabMenu",
+          "lastModified": "2026-10-26T16:32:07Z",
+          "createdByHandle": "Lorenzo Fasanelli",
+          "lastEditedByHandle": "Lorenzo Fasanelli",
+          "lastEditedAt": "2026-10-26T16:47:00.157Z",
+          "createdAt": "2026-10-16T14:23:12Z"
+        },
+        {
+          "key": "H4CQqH1ZmwdgVi935OzHUV",
+          "name": "radioButtonGroup",
+          "lastModified": "2026-10-27T14:44:39Z",
+          "createdByHandle": "Laura isabel Perea vanguelova",
+          "lastEditedByHandle": "Jordi Alonso",
+          "lastEditedAt": "2026-10-27T14:44:39.446Z",
+          "createdAt": "2026-10-23T07:39:43Z"
+        },
+        {
+          "key": "BCkLqfqc5GMoFVcANdIIbt",
+          "name": "Iphone Duo",
+          "lastModified": "2026-10-30T10:15:22Z",
+          "createdByHandle": "Matheus Koch",
+          "lastEditedByHandle": "Matheus Koch",
+          "lastEditedAt": "2026-10-30T10:15:22.283Z",
+          "createdAt": "2026-10-23T10:26:38Z"
+        },
+        {
+          "key": "GNMTqROEKpd9wrqwu90Gh3",
+          "name": "divider - update color",
+          "lastModified": "2026-10-08T12:21:18Z",
+          "createdByHandle": "Francisco Romano",
+          "lastEditedByHandle": "Francisco Romano",
+          "lastEditedAt": "2026-06-10T09:09:36.591Z",
+          "createdAt": "2026-06-10T09:00:14Z"
+        },
+        {
+          "key": "TY0UPhZepE7u6f0caUWLOa",
+          "name": "update target size",
+          "lastModified": "2026-10-08T12:21:18Z",
+          "createdByHandle": "Andrea Escobar",
+          "lastEditedByHandle": "Andrea Escobar",
+          "lastEditedAt": "2026-09-17T07:45:14.057Z",
+          "createdAt": "2026-09-16T09:27:09Z"
+        },
+        {
+          "key": "pL7CIVrZvgTg1kWS3bQrQ2",
+          "name": "Text Button for List item",
+          "lastModified": "2026-11-02T15:01:35Z",
+          "createdByHandle": "Jack Coles",
+          "lastEditedByHandle": "Jack Coles",
+          "lastEditedAt": "2026-11-02T15:01:35.143Z",
+          "createdAt": "2026-11-02T13:10:41Z"
+        },
+        {
+          "key": "l47AmTUrMU1CiPTeludpiV",
+          "name": "DOC Clean-up",
+          "lastModified": "2026-10-08T12:21:18Z",
+          "createdByHandle": "Laura Barquet",
+          "lastEditedByHandle": "Laura Barquet",
+          "lastEditedAt": "2026-09-17T16:00:29.876Z",
+          "createdAt": "2026-09-04T11:11:41Z"
+        },
+        {
+          "key": "OKSOvKruZstAfx2YaY0wcR",
+          "name": "New Orange Color",
+          "lastModified": "2026-10-08T12:21:18Z",
+          "createdByHandle": "Laura Barquet",
+          "lastEditedByHandle": "Laura Barquet",
+          "lastEditedAt": "2026-03-10T08:54:23.643Z",
+          "createdAt": "2026-02-04T14:08:37Z"
+        },
+        {
+          "key": "7PLmRtEZ68RJ1ByrhyoTJo",
+          "name": "otp",
+          "lastModified": "2026-10-08T12:21:18Z",
+          "createdByHandle": "Pietro Colamussi",
+          "lastEditedByHandle": "Pietro Colamussi",
+          "lastEditedAt": "2026-09-16T12:53:42.137Z",
+          "createdAt": "2026-09-14T13:34:07Z"
+        },
+        {
+          "key": "Y3qd988HYJlgpyjpwYQHDs",
+          "name": "navBar native",
+          "lastModified": "2026-10-28T17:01:15Z",
+          "createdByHandle": "Anna Cieślak",
+          "lastEditedByHandle": "Anna Cieślak",
+          "lastEditedAt": "2026-10-28T17:01:15.402Z",
+          "createdAt": "2026-10-28T09:27:39Z"
+        },
+        {
+          "key": "9Xv9kcOzSzq6iqP02QpLUA",
+          "name": "radioButton2",
+          "lastModified": "2026-10-29T13:59:24Z",
+          "createdByHandle": "Laura isabel Perea vanguelova",
+          "lastEditedByHandle": "Laura isabel Perea vanguelova",
+          "lastEditedAt": "2026-10-29T13:59:24.127Z",
+          "createdAt": "2026-10-28T14:52:25Z"
+        },
+        {
+          "key": "IC9Kufiytpde1wbdikFzZ6",
+          "name": "Phonefield",
+          "lastModified": "2026-10-08T12:21:18Z",
+          "createdByHandle": "Andrea Escobar",
+          "lastEditedByHandle": "Andrea Escobar",
+          "lastEditedAt": "2026-08-03T09:44:39.632Z",
+          "createdAt": "2026-07-15T09:55:58Z"
+        },
+        {
+          "key": "rbRqXPDspZHJnTpxtkaMF3",
+          "name": "header content \"main page\"",
+          "lastModified": "2026-10-08T12:21:18Z",
+          "createdByHandle": "Anna Cieślak",
+          "lastEditedByHandle": "Anna Cieślak",
+          "lastEditedAt": "2026-06-08T09:39:48.353Z",
+          "createdAt": "2026-05-29T13:16:23Z"
+        },
+        {
+          "key": "2flpSBtftruqoPyY3au537",
+          "name": "radio test",
+          "lastModified": "2026-11-02T17:07:01Z",
+          "createdByHandle": "Jordi Alonso",
+          "lastEditedByHandle": "Laura isabel Perea vanguelova",
+          "lastEditedAt": "2026-11-02T17:07:01.276Z",
+          "createdAt": "2026-10-29T13:42:43Z"
+        },
+        {
+          "key": "9rv72dhW213LfGDe0AC972",
+          "name": "card background",
+          "lastModified": "2026-10-08T12:21:18Z",
+          "createdByHandle": "Anna Cieślak",
+          "lastEditedByHandle": "Laura Barquet",
+          "lastEditedAt": "2026-03-17T10:52:56.417Z",
+          "createdAt": "2026-03-16T14:00:03Z"
+        },
+        {
+          "key": "dNNXQAcPM25a1Yh9hzgoTX",
+          "name": "padding modal",
+          "lastModified": "2026-10-08T12:21:18Z",
+          "createdByHandle": "Laura isabel Perea vanguelova",
+          "lastEditedByHandle": "Andres Vizio",
+          "lastEditedAt": "2026-05-28T13:34:45.946Z",
+          "createdAt": "2026-05-28T13:10:41Z"
+        },
+        {
+          "key": "IpEFP7c3lX4JDDLuX0nIiX",
+          "name": "Review Warning variables",
+          "lastModified": "2026-10-08T12:21:18Z",
+          "createdByHandle": "Miguel Olivera",
+          "lastEditedByHandle": "Miguel Olivera",
+          "lastEditedAt": "2026-05-08T12:15:09.447Z",
+          "createdAt": "2026-05-08T06:31:46Z"
+        },
+        {
+          "key": "Yqw6GAoCyNSdsK4JZaGXCS",
+          "name": "Static card radius",
+          "lastModified": "2026-10-08T12:21:18Z",
+          "createdByHandle": "Jack Coles",
+          "lastEditedByHandle": "Jack Coles",
+          "lastEditedAt": "2026-10-02T09:41:36.085Z",
+          "createdAt": "2026-06-29T09:19:13Z"
+        },
+        {
+          "key": "bExlb5W77kQji4R2XPG8RW",
+          "name": "Snackbar safe area",
+          "lastModified": "2026-10-08T12:21:18Z",
+          "createdByHandle": "Lorenzo Fasanelli",
+          "lastEditedByHandle": "Jordi Alonso",
+          "lastEditedAt": "2026-05-27T13:47:08.051Z",
+          "createdAt": "2026-05-27T16:18:19Z"
+        },
+        {
+          "key": "Dqctf22eR1wiv8Rjh2CMnD",
+          "name": "[new variant] orderTile - Web cart",
+          "lastModified": "2026-10-08T12:21:18Z",
+          "createdByHandle": "Camilla Chang",
+          "lastEditedByHandle": "Pietro Colamussi",
+          "lastEditedAt": "2026-06-30T12:59:51.770Z",
+          "createdAt": "2026-06-11T10:31:13Z"
+        },
+        {
+          "key": "dcdexMiLFKkxJS2Fv6HSJL",
+          "name": "Test Andy",
+          "lastModified": "2026-10-08T12:21:18Z",
+          "createdByHandle": "Andres Vizio",
+          "lastEditedByHandle": "Andres Vizio",
+          "lastEditedAt": "2026-10-08T08:05:24.850Z",
+          "createdAt": "2026-09-28T15:17:08Z"
+        },
+        {
+          "key": "THHyNGVi3hcWmQUUpL8KjT",
+          "name": "Text Button a11y",
+          "lastModified": "2026-10-30T15:41:05Z",
+          "createdByHandle": "Andres Vizio",
+          "lastEditedByHandle": "Andres Vizio",
+          "lastEditedAt": "2026-10-30T15:49:19.742Z",
+          "createdAt": "2026-10-23T12:23:33Z"
+        },
+        {
+          "key": "BZBt2xhwQ6FPD4XtWlRGgn",
+          "name": "toggleIconButton dark mode",
+          "lastModified": "2026-10-28T16:02:59Z",
+          "createdByHandle": "Lorenzo Fasanelli",
+          "lastEditedByHandle": "Lorenzo Fasanelli",
+          "lastEditedAt": "2026-10-28T16:02:59.107Z",
+          "createdAt": "2026-10-23T14:41:09Z"
+        }
+      ]
+    }
+  ],
+  "jira": {
+    "openCount": 0,
+    "resolvedThisWeek": 0
+  },
+  "calendar": {
+    "error": "Missing GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, or GOOGLE_REFRESH_TOKEN env var"
+  }
+}

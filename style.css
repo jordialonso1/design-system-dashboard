@@ -1,0 +1,1365 @@
+:root {
+  color-scheme: dark;
+
+  --bg: #0d0d0d;
+  --surface: #1a1a19;
+  --ink: #ffffff;
+  --ink-secondary: #c3c2b7;
+  --ink-muted: #898781;
+  --gridline: #2c2c2a;
+  --border: rgba(255, 255, 255, 0.10);
+
+  /* One signature hue per data domain (validated categorical slots) */
+  --accent-figma: #3987e5;
+  --accent-jira: #d95926;
+  --accent-calendar: #199e70;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 40px;
+
+  --radius: 14px;
+  --radius-sm: 10px;
+
+  /* A simple, restrained type scale — few steps, small jumps. */
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.8125rem;
+  --fs-md: 0.9375rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.75rem;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #f9f9f7;
+  --surface: #fcfcfb;
+  --ink: #0b0b0b;
+  --ink-secondary: #52514e;
+  --ink-muted: #898781;
+  --gridline: #e1e0d9;
+  --border: rgba(11, 11, 11, 0.10);
+
+  --accent-figma: #2a78d6;
+  --accent-jira: #eb6834;
+  --accent-calendar: #1baf7a;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+h1, h2, .kpi-value {
+  font-family: "Space Grotesk", -apple-system, sans-serif;
+}
+
+.widget-index {
+  position: fixed;
+  top: var(--space-4);
+  left: var(--space-4);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.widget-index-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink-secondary);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.widget-index-toggle:hover {
+  border-color: var(--accent-figma);
+  color: var(--ink);
+}
+
+.widget-index-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 210px;
+  max-height: calc(100vh - 96px);
+  overflow-y: auto;
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* Collapsed by JS (state persisted in localStorage) — the toggle stays
+   put as a small fixed pill in the corner either way, so the index never
+   permanently occupies space it might not have on a narrow viewport. */
+.widget-index.collapsed .widget-index-list {
+  display: none;
+}
+
+/* Wraps one tab's group label + links as a single unit so
+   syncFloatingControlsToTab (app.js) can show/hide it as a whole — only
+   ever one of these is visible at a time, matching whichever tab is open.
+   Needs its own flex/gap since wrapping breaks .widget-index-list's own
+   gap (that only applies between its direct children, which are now these
+   group divs, not the label/link elements themselves). */
+.widget-index-tab-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.widget-index-tab-group[hidden] {
+  display: none;
+}
+
+.widget-index-group {
+  margin: var(--space-2) var(--space-2) var(--space-1);
+  color: var(--ink-muted);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.widget-index-group:first-child {
+  margin-top: var(--space-1);
+}
+
+.widget-index-link {
+  display: block;
+  width: 100%;
+  padding: var(--space-2) var(--space-2);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-secondary);
+  font-size: var(--fs-sm);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.widget-index-link:hover,
+.widget-index-link:focus-visible {
+  background: var(--gridline);
+  color: var(--ink);
+}
+
+.widget-index-link.active {
+  background: var(--gridline);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Below this width the gutter beside the centered `main` column is too
+   narrow for an open index list to sit in without overlapping content —
+   force it collapsed to just the toggle pill so opening it is always a
+   deliberate click, not an accidental overlap. */
+@media (max-width: 900px) {
+  .widget-index-list {
+    width: 180px;
+  }
+}
+
+.topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-5) var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar h1 {
+  margin: 0 0 var(--space-1);
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.updated {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--fs-xs);
+}
+
+.topbar-actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.theme-toggle,
+.refresh-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink-secondary);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  font-family: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.theme-toggle {
+  padding: var(--space-2);
+  line-height: 1;
+  font-size: var(--fs-md);
+}
+
+.theme-toggle:hover,
+.refresh-link:hover {
+  border-color: var(--accent-calendar);
+  color: var(--ink);
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  display: grid;
+  gap: var(--space-3);
+}
+
+.tabs {
+  display: flex;
+  gap: var(--space-2);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--space-2);
+}
+
+.tab {
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-muted);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.tab:hover {
+  color: var(--ink);
+}
+
+.tab[aria-selected="true"] {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--border);
+}
+
+.tab-panel {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.tab-panel[hidden] {
+  display: none;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+.tile, .panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  /* A grid item's default min-width is "auto" (its content's intrinsic
+     minimum), not 0 — normally harmless, but a wide nowrap table inside
+     (see .monthly-table) can blow this panel out past the grid track
+     instead of scrolling inside its own overflow-x:auto wrapper. Pinning
+     this to 0 lets the grid track's own width win, same fix as flexbox's
+     well-known min-width:auto overflow gotcha. */
+  min-width: 0;
+}
+
+.banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid;
+}
+
+.banner p {
+  margin: 0;
+  color: var(--ink-secondary);
+}
+
+.banner-icon {
+  line-height: 1.4;
+}
+
+/* Shares the warning banner's subtle look — a plain informational note,
+   not an alert, so it doesn't reuse the "warning" name. */
+.banner-warning,
+.banner-note {
+  background: var(--gridline);
+  border-color: var(--border);
+  color: var(--ink-muted);
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.tile-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--ink-muted);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--ink-muted);
+}
+
+.tile[data-accent="figma"] .dot,
+.panel[data-accent="figma"] .dot { background: var(--accent-figma); }
+.tile[data-accent="jira"] .dot,
+.panel[data-accent="jira"] .dot { background: var(--accent-jira); }
+.tile[data-accent="calendar"] .dot,
+.panel[data-accent="calendar"] .dot { background: var(--accent-calendar); }
+
+.kpi-value {
+  font-size: var(--fs-xl);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.kpi-delta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.panel-head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.panel-head .dot {
+  margin-top: 7px;
+}
+
+.panel h2 {
+  margin: 0 0 2px;
+  font-size: var(--fs-md);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.panel-sub {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--fs-xs);
+}
+
+.split-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+/* Library size is the one panel with a third split (Icons & other assets)
+   alongside Components/Styles — a plain 3-up .split-charts would leave the
+   two-column panels (Open work, Meeting load) needing their own override
+   instead, so this is a modifier rather than changing the shared class. */
+.split-charts-3 {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.split-label {
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--ink-muted);
+}
+
+.split-value {
+  margin: 2px 0 var(--space-2);
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.aging-combined-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+}
+
+.aging-combined-col {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.aging-combined-col-title {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.aging-combined-col-sub {
+  margin: -6px 0 0;
+  color: var(--ink-muted);
+  font-size: var(--fs-xs);
+}
+
+/* Each side is noticeably heavier than the small paired line charts
+   .split-charts was built for (KPI tiles + a waffle grid on one side, a
+   multi-column table on the other), so this collapses to a single column
+   well before .split-charts does — a half-width column at tablet widths
+   would squeeze the waffle grid and the table's own horizontal scroll
+   both too tight to be useful. */
+@media (max-width: 860px) {
+  .aging-combined-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .split-charts,
+  .split-charts-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .tiles {
+    grid-template-columns: 1fr;
+  }
+}
+
+.branch-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.branch-filter {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--ink-secondary);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+}
+
+.branch-filter input {
+  accent-color: var(--accent-figma);
+}
+
+.branch-per-page {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--ink-secondary);
+  font-size: var(--fs-sm);
+}
+
+.branch-per-page select {
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--fs-sm);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.branch-per-page select:hover {
+  border-color: var(--accent-figma);
+}
+
+.branch-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.branch-empty {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--fs-sm);
+}
+
+.branch-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.branch-card-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.branch-name {
+  margin: 0 auto 0 0;
+  font-weight: 500;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.branch-age {
+  flex-shrink: 0;
+  color: var(--ink-muted);
+  font-size: var(--fs-xs);
+  white-space: nowrap;
+}
+
+.branch-status {
+  flex-shrink: 0;
+  padding: 2px var(--space-2);
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.branch-status-open {
+  background: color-mix(in srgb, var(--accent-figma) 16%, transparent);
+  color: var(--accent-figma);
+}
+
+.branch-status-merged {
+  background: color-mix(in srgb, var(--ink-muted) 16%, transparent);
+  color: var(--ink-muted);
+}
+
+.branch-card-merged {
+  opacity: 0.75;
+}
+
+.branch-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3) var(--space-4);
+  margin: 0;
+}
+
+.branch-meta-item dt {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--fs-xs);
+}
+
+.branch-meta-item dd {
+  margin: 2px 0 0;
+  color: var(--ink);
+  font-size: var(--fs-sm);
+}
+
+.branch-category-publish-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.branch-category-publish-hint {
+  max-width: 240px;
+  text-align: right;
+}
+
+.branch-category-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.branch-category-label {
+  color: var(--ink-muted);
+  font-size: var(--fs-xs);
+}
+
+.branch-category-select {
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--fs-sm);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.branch-category-select:hover {
+  border-color: var(--accent-figma);
+}
+
+.branch-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.branch-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  font-family: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+
+.branch-btn-primary {
+  background: var(--accent-figma);
+  border-color: var(--accent-figma);
+  color: #fff;
+}
+
+.branch-btn-secondary {
+  background: var(--surface);
+  color: var(--ink-secondary);
+}
+
+.branch-btn-secondary:hover {
+  border-color: var(--accent-figma);
+  color: var(--ink);
+}
+
+@media (max-width: 520px) {
+  .branch-meta-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-box {
+  position: relative;
+  width: 100%;
+}
+
+.chart-box-sm { height: 140px; }
+.chart-box-lg { height: 200px; }
+.chart-box-xl { height: 380px; }
+/* A fixed height, deliberately not shared with .chart-box-xl (which also
+   sizes the Branch creators treemap) — createCycleTimeScatterPlot's
+   custom y-axis (cycle-time-scatter.js) keeps the 0-5d band's pixel
+   height constant and instead adapts the *rate* for everything above it
+   per render, so this container never needs to resize itself: pagination
+   and the "exclude cleanup outliers" toggle only change what's drawn
+   inside it, never its size. Matches CYCLE_TIME_CHART_TOTAL_HEIGHT_PX in
+   cycle-time-scatter.js — keep the two in sync if either changes. */
+.chart-box-cycle-time { height: 520px; }
+
+/* Only used inside .aging-combined-col (a flex column): grows to fill
+   whatever leftover vertical space that column has, so the Weekly history
+   chart always matches the Current distribution column's height instead
+   of stopping short at a fixed size while the waffle+legend beside it
+   (whose height is data-driven — more open branches means more waffle
+   rows) keeps going. 380px is the same floor .chart-box-xl uses elsewhere
+   (never shrinks below it, only grows past it), so a short waffle column
+   doesn't squeeze this chart uncomfortably small. */
+.chart-box-flex {
+  flex: 1 0 380px;
+}
+
+.chart-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+}
+
+.chart-legend {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--ink-secondary);
+  font-size: var(--fs-sm);
+}
+
+.legend-item strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-dot-created { background: var(--accent-figma); }
+.legend-dot-merged { background: var(--ink-muted); }
+
+/* Cleanup-event dots are hollow (see cycle-time-scatter.js) — the legend
+   swatch matches: transparent fill, a 2px ring in the same violet used on
+   the chart itself. */
+.legend-dot-hollow {
+  background: transparent;
+  border: 2px solid;
+}
+
+.legend-dash {
+  width: 16px;
+  height: 0;
+  border-top: 2px dashed;
+  flex-shrink: 0;
+}
+
+.legend-dash-solid {
+  border-top-style: solid;
+}
+
+.kpi-delta-good { color: var(--accent-calendar); }
+.kpi-delta-bad { color: var(--accent-jira); }
+
+.cycle-time-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.cycle-time-cleanup-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-sm);
+  color: var(--ink-secondary);
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.cycle-time-cleanup-toggle input {
+  accent-color: var(--accent-figma);
+}
+
+#cycle-time-cleanup-banner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.metric-legend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.metric-legend-row {
+  display: grid;
+  grid-template-columns: minmax(160px, 200px) 1fr;
+  gap: var(--space-3);
+  align-items: baseline;
+}
+
+.metric-legend-desc {
+  margin: 0;
+  color: var(--ink-secondary);
+  font-size: var(--fs-sm);
+}
+
+@media (max-width: 520px) {
+  .metric-legend-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+}
+
+.aging-buckets-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+/* A plain list of metric rows rather than bordered/padded tile cards —
+   this column is only half the panel's width (Aging buckets & history is
+   a 2-column layout), and 3 full tile cards (even forced into one row)
+   still cost more height than this pairing needs, leaving the column
+   noticeably taller than the Weekly history chart beside it. One line per
+   metric keeps the two columns close in height instead. */
+.metric-bullets {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.metric-bullet {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.metric-bullet-label {
+  flex: 1;
+  color: var(--ink-secondary);
+  font-size: var(--fs-sm);
+}
+
+.metric-bullet-value {
+  flex-shrink: 0;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: var(--fs-md);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Compound selectors so these outrank the plain .metric-bullet-value rule
+   above regardless of source order — same fix already applied to
+   .monthly-table-delta/.aging-history-trend, for the same reason:
+   .kpi-delta-good/-bad are shared, standalone classes used elsewhere too,
+   so they can't just be reordered to win by cascade position. */
+.metric-bullet-value.kpi-delta-good { color: var(--accent-calendar); }
+.metric-bullet-value.kpi-delta-bad { color: var(--accent-jira); }
+
+.metric-bullet-note,
+.metric-bullet-sub {
+  color: var(--ink-muted);
+  font-weight: 400;
+  font-size: var(--fs-xs);
+}
+
+.waffle-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.waffle-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--waffle-columns, 10), 1fr);
+  gap: 4px;
+}
+
+.waffle-cell {
+  padding: 0;
+  border: none;
+  border-radius: 3px;
+  aspect-ratio: 1 / 1;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.waffle-cell:hover,
+.waffle-cell:focus-visible {
+  transform: scale(1.2);
+}
+
+.waffle-legend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.waffle-legend-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-secondary);
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.waffle-legend-row:hover:not(:disabled) {
+  border-color: var(--accent-figma);
+  color: var(--ink);
+}
+
+.waffle-legend-row:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.waffle-legend-label {
+  flex: 1;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.waffle-legend-range {
+  color: var(--ink-muted);
+  font-weight: 400;
+  font-size: var(--fs-xs);
+}
+
+.waffle-legend-count {
+  flex-shrink: 0;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.waffle-legend-percent {
+  color: var(--ink-muted);
+  font-weight: 400;
+  font-size: var(--fs-xs);
+}
+
+.waffle-tooltip {
+  position: fixed;
+  z-index: 50;
+  max-width: 240px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.waffle-tooltip-title {
+  margin: 0 0 var(--space-1);
+  color: var(--ink);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.waffle-tooltip-row {
+  margin: 0;
+  color: var(--ink-secondary);
+  font-size: var(--fs-xs);
+}
+
+.waffle-tooltip-link {
+  display: inline-block;
+  margin-top: var(--space-2);
+  color: var(--accent-figma);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.waffle-tooltip-link:hover {
+  text-decoration: underline;
+}
+
+.treemap-summary {
+  margin-bottom: var(--space-3);
+}
+
+/* Reuses .chart-box/.chart-box-xl for width/height (see above) — this just
+   adds overflow clipping, since a treemap's boxes are computed to exactly
+   fill the container but shouldn't visibly spill if a resize measurement
+   ever lands a pixel off. */
+.treemap-box {
+  overflow: hidden;
+}
+
+.treemap-empty {
+  margin: 0;
+  padding: var(--space-3);
+  color: var(--ink-muted);
+  font-size: var(--fs-sm);
+}
+
+.treemap-cell {
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--space-1);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: outline-color 0.1s ease;
+}
+
+.treemap-cell:hover,
+.treemap-cell:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+  z-index: 1;
+}
+
+/* A fixed dark scrim behind the label — deliberately theme-invariant hex,
+   not a CSS variable — so white text stays legible regardless of where a
+   given box's sequential accent-figma tint (see treemapCellColor in
+   branch-creators-treemap.js) lands between --surface and full accent, in
+   either theme. */
+.treemap-cell-label-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 100%;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.treemap-cell-label {
+  overflow: hidden;
+  color: #fff;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.treemap-cell-count {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.aging-branch-details {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.aging-branch-details-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.aging-branch-details-head p {
+  margin: 0;
+  color: var(--ink-secondary);
+  font-size: var(--fs-sm);
+}
+
+.aging-branch-details-close {
+  padding: var(--space-1);
+  border: none;
+  background: transparent;
+  color: var(--ink-muted);
+  font-size: var(--fs-sm);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.aging-branch-details-close:hover { color: var(--ink); }
+
+.aging-branch-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.aging-branch-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.aging-branch-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+/* Only the Branch activity details rows link the name out to Figma (see
+   renderBranchActivityDetails) — the Aging Buckets/History detail rows
+   reuse plain .aging-branch-name for a non-clickable label, so the link
+   reset lives in this separate modifier rather than on the base class. */
+.aging-branch-name-link {
+  text-decoration: none;
+}
+
+.aging-branch-name-link:hover {
+  text-decoration: underline;
+}
+
+.aging-branch-age {
+  flex-shrink: 0;
+  color: var(--ink-muted);
+  font-size: var(--fs-xs);
+  white-space: nowrap;
+}
+
+.aging-history-detail-wow {
+  margin: var(--space-2) 0 0;
+  color: var(--ink-secondary);
+  font-size: var(--fs-sm);
+}
+
+.monthly-table-section {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.monthly-table-section h3 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.monthly-table-wrap {
+  overflow-x: auto;
+}
+
+.monthly-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.monthly-table th {
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  color: var(--ink-muted);
+  font-weight: 500;
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.monthly-table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.monthly-table tr:last-child td {
+  border-bottom: none;
+}
+
+.monthly-table-delta {
+  margin-left: var(--space-1);
+  font-size: var(--fs-xs);
+  color: var(--ink-muted); /* the "—"/"No change" case */
+}
+
+/* Compound selectors so these outrank the plain .monthly-table-delta rule
+   above regardless of source order — .kpi-delta-good/-bad are also used
+   standalone elsewhere (the KPI card), so they can't just be reordered. */
+.monthly-table-delta.kpi-delta-good { color: var(--accent-calendar); }
+.monthly-table-delta.kpi-delta-bad { color: var(--accent-jira); }
+
+.granularity-toggle {
+  display: flex;
+  gap: 2px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+}
+
+.granularity-btn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink-muted);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.granularity-btn:hover { color: var(--ink); }
+.granularity-btn.active { background: var(--surface); color: var(--ink); }
+
+/* Lives at the top of the floating #widget-index nav (see index.html), not
+   inline in the Branches tab — it needs to stay reachable while scrolling
+   the same way the "Jump to" index does, and hiding on Overview (see
+   syncFloatingControlsToTab in app.js) only works cleanly if it's part of
+   that same persistent, tab-aware nav rather than living in page flow.
+   Its own border/shadow (not the accent-tinted card the inline version
+   used) matches .widget-index-toggle's floating-pill look; the solid
+   accent-figma active state is still what makes it stand out from that
+   plainer sibling. */
+.category-filter-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.category-filter-toggle[hidden] {
+  display: none;
+}
+
+.category-filter-btn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink-muted);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.category-filter-btn:hover { color: var(--ink); }
+.category-filter-btn.active { background: var(--accent-figma); color: #fff; }
+
+.chart-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.chart-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-secondary);
+  font-size: var(--fs-md);
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.chart-nav-btn:hover:not(:disabled) {
+  border-color: var(--accent-figma);
+  color: var(--ink);
+}
+
+.chart-nav-btn:disabled {
+  color: var(--ink-muted);
+  opacity: 0.4;
+  cursor: default;
+}
+
+.chart-nav-range {
+  min-width: 160px;
+  text-align: center;
+  color: var(--ink-muted);
+  font-size: var(--fs-xs);
+}
+
+.branches-nav {
+  margin-top: var(--space-2);
+  padding: var(--space-3) 0;
+}
+
+footer {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 var(--space-5) var(--space-5);
+  color: var(--ink-muted);
+  font-size: var(--fs-xs);
+}
+
+footer code {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 2px 5px;
+  border-radius: 4px;
+  color: var(--ink-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

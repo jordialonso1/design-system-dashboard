@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Design system health</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+<script>
+  // Applied before paint to avoid a flash of the wrong theme.
+  try {
+    var saved = localStorage.getItem("dsh-theme");
+    if (saved === "light" || saved === "dark") {
+      document.documentElement.setAttribute("data-theme", saved);
+    }
+  } catch (e) {}
+</script>
+</head>
+<body>
+  <nav class="widget-index" id="widget-index" aria-label="Jump to a dashboard section">
+    <div class="category-filter-toggle" role="tablist" aria-label="Filter branches by manually tagged category" id="category-filter-bar">
+      <button type="button" class="category-filter-btn active" id="category-filter-all">All</button>
+      <button type="button" class="category-filter-btn" id="category-filter-pintxo">Pintxo</button>
+      <button type="button" class="category-filter-btn" id="category-filter-business">Business</button>
+    </div>
+    <button
+      class="widget-index-toggle"
+      id="widget-index-toggle"
+      type="button"
+      aria-expanded="true"
+      aria-controls="widget-index-list"
+    >
+      <span class="widget-index-toggle-icon" aria-hidden="true">☰</span>
+      <span class="widget-index-toggle-label">Jump to</span>
+    </button>
+    <div class="widget-index-list" id="widget-index-list">
+      <div class="widget-index-tab-group" data-tab-group="tab-overview" hidden>
+        <p class="widget-index-group">Overview</p>
+        <button type="button" class="widget-index-link" data-tab="tab-overview" data-target="tiles">Current metrics</button>
+        <button type="button" class="widget-index-link" data-tab="tab-overview" data-target="panel-library-size">Library size</button>
+        <button type="button" class="widget-index-link" data-tab="tab-overview" data-target="panel-open-work">Open work</button>
+        <button type="button" class="widget-index-link" data-tab="tab-overview" data-target="panel-meeting-load">Meeting load</button>
+      </div>
+      <div class="widget-index-tab-group" data-tab-group="tab-branches">
+        <p class="widget-index-group">Branches</p>
+        <button type="button" class="widget-index-link" data-tab="tab-branches" data-target="panel-branch-activity">Branch activity</button>
+        <button type="button" class="widget-index-link" data-tab="tab-branches" data-target="panel-aging-buckets">Aging buckets &amp; history</button>
+        <button type="button" class="widget-index-link" data-tab="tab-branches" data-target="panel-cycle-time">Cycle time trend</button>
+        <button type="button" class="widget-index-link" data-tab="tab-branches" data-target="panel-branch-creators">Branch creators</button>
+        <button type="button" class="widget-index-link" data-tab="tab-branches" data-target="panel-library-branches">Library branches</button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="topbar">
+    <div class="topbar-info">
+      <h1>Design system health</h1>
+      <p class="updated" id="updated">Loading latest snapshot…</p>
+    </div>
+    <div class="topbar-actions">
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch color theme">
+        <span id="theme-toggle-icon" aria-hidden="true">☾</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <nav class="tabs" role="tablist" aria-label="Dashboard sections">
+      <button
+        class="tab"
+        id="tab-branches"
+        type="button"
+        role="tab"
+        aria-selected="true"
+        aria-controls="panel-branches"
+      >Branches</button>
+      <button
+        class="tab"
+        id="tab-overview"
+        type="button"
+        role="tab"
+        aria-selected="false"
+        aria-controls="panel-overview"
+      >Overview</button>
+    </nav>
+
+    <div id="panel-overview" class="tab-panel" role="tabpanel" aria-labelledby="tab-overview" hidden>
+      <div class="banner banner-warning" id="wip-banner" role="note">
+        <span class="banner-icon" aria-hidden="true">⚠</span>
+        <p>WIP</p>
+      </div>
+
+      <section class="tiles" id="tiles" aria-label="Current metrics"></section>
+
+      <section class="panel" id="panel-library-size" data-accent="figma" aria-label="Component and style count over time">
+        <div class="panel-head">
+          <span class="dot" aria-hidden="true"></span>
+          <div>
+            <h2>Library size</h2>
+            <p class="panel-sub">Published components and styles, from Figma</p>
+          </div>
+        </div>
+        <div class="split-charts split-charts-3">
+          <div class="split-chart">
+            <p class="split-label">Components</p>
+            <p class="split-value" id="value-figma-components">—</p>
+            <div class="chart-box chart-box-sm"><canvas id="chart-figma-components"></canvas></div>
+          </div>
+          <div class="split-chart">
+            <p class="split-label">Styles</p>
+            <p class="split-value" id="value-figma-styles">—</p>
+            <div class="chart-box chart-box-sm"><canvas id="chart-figma-styles"></canvas></div>
+          </div>
+          <div class="split-chart">
+            <p class="split-label">Icons &amp; other assets</p>
+            <p class="split-value" id="value-figma-icon-assets">—</p>
+            <div class="chart-box chart-box-sm"><canvas id="chart-figma-icon-assets"></canvas></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-open-work" data-accent="jira" aria-label="Jira issue trend">
+        <div class="panel-head">
+          <span class="dot" aria-hidden="true"></span>
+          <div>
+            <h2>Open work</h2>
+            <p class="panel-sub">Open issues vs. issues resolved in the trailing 7 days</p>
+          </div>
+        </div>
+        <div class="split-charts">
+          <div class="split-chart">
+            <p class="split-label">Open issues</p>
+            <p class="split-value" id="value-jira-open">—</p>
+            <div class="chart-box chart-box-sm"><canvas id="chart-jira-open"></canvas></div>
+          </div>
+          <div class="split-chart">
+            <p class="split-label">Resolved (7d)</p>
+            <p class="split-value" id="value-jira-resolved">—</p>
+            <div class="chart-box chart-box-sm"><canvas id="chart-jira-resolved"></canvas></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-meeting-load" data-accent="calendar" aria-label="Meeting load trend">
+        <div class="panel-head">
+          <span class="dot" aria-hidden="true"></span>
+          <div>
+            <h2>Meeting load</h2>
+            <p class="panel-sub">Hours spent in design-system meetings, trailing 7 days</p>
+          </div>
+        </div>
+        <div class="chart-box chart-box-lg"><canvas id="chart-calendar"></canvas></div>
+      </section>
+    </div>
+
+    <div id="panel-branches" class="tab-panel" role="tabpanel" aria-labelledby="tab-branches">
+      <section class="panel" id="panel-branch-activity" data-accent="figma" aria-label="Branch creation and merge activity">
+        <div class="panel-head">
+          <div>
+            <h2>Branch activity</h2>
+            <p class="panel-sub">Branches created vs. closed in the Pintxo Design System file</p>
+            <p class="panel-sub">Branches must be open for more than 80 minutes to be included in this data safely</p>
+          </div>
+        </div>
+        <div class="chart-toolbar">
+          <div class="chart-legend">
+            <span class="legend-item"><span class="legend-dot legend-dot-created" aria-hidden="true"></span>Created <strong id="value-branch-activity-created">—</strong></span>
+            <span class="legend-item"><span class="legend-dot legend-dot-merged" aria-hidden="true"></span>Closed <strong id="value-branch-activity-merged">—</strong></span>
+          </div>
+          <div class="granularity-toggle" role="tablist">
+            <button type="button" class="granularity-btn" id="granularity-day">Day</button>
+            <button type="button" class="granularity-btn active" id="granularity-week">Week</button>
+            <button type="button" class="granularity-btn" id="granularity-month">Month</button>
+          </div>
+        </div>
+        <div class="chart-nav">
+          <button type="button" class="chart-nav-btn" id="branch-activity-prev" aria-label="Show earlier dates">‹</button>
+          <span class="chart-nav-range" id="branch-activity-range"></span>
+          <button type="button" class="chart-nav-btn" id="branch-activity-next" aria-label="Show later dates">›</button>
+        </div>
+        <div class="chart-box chart-box-lg"><canvas id="chart-branch-activity"></canvas></div>
+        <div class="aging-branch-details" id="branch-activity-details" hidden></div>
+      </section>
+
+      <section class="panel" id="panel-aging-buckets" data-accent="figma" aria-label="Open branch aging — current distribution and weekly history">
+        <div class="panel-head">
+          <div>
+            <h2>Aging buckets &amp; history</h2>
+            <p class="panel-sub">Open branches grouped by age against the P50/P85 cycle-time baseline, and how that distribution has moved week to week</p>
+          </div>
+        </div>
+        <div class="aging-combined-grid">
+          <div class="aging-combined-col">
+            <h3 class="aging-combined-col-title">Current distribution</h3>
+            <p class="aging-combined-col-sub">One square per branch — click a square or a bucket below to see its branches</p>
+            <div class="aging-buckets-summary">
+              <ul class="metric-bullets" id="aging-buckets-kpi"></ul>
+            </div>
+            <div class="waffle-wrap">
+              <div class="waffle-grid" id="aging-buckets-waffle"></div>
+              <div class="waffle-legend" id="aging-buckets-legend"></div>
+            </div>
+            <div class="aging-branch-details" id="aging-buckets-details" hidden></div>
+          </div>
+          <div class="aging-combined-col">
+            <h3 class="aging-combined-col-title">Weekly history</h3>
+            <p class="aging-combined-col-sub">Recorded every Monday — hover a bar for that week's counts, click a bar for the full breakdown</p>
+            <div class="chart-nav">
+              <button type="button" class="chart-nav-btn" id="aging-history-prev" aria-label="Show earlier weeks">‹</button>
+              <span class="chart-nav-range" id="aging-history-range"></span>
+              <button type="button" class="chart-nav-btn" id="aging-history-next" aria-label="Show later weeks">›</button>
+            </div>
+            <div class="chart-box chart-box-flex"><canvas id="chart-aging-history"></canvas></div>
+            <div class="aging-branch-details" id="aging-history-details" hidden></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-cycle-time" data-accent="figma" aria-label="Branch cycle time trend">
+        <div class="panel-head">
+          <div>
+            <h2>Cycle time trend</h2>
+            <p class="panel-sub">Closed branch durations in a 90-day window, with 30-day rolling P50/P85 and a trendline</p>
+          </div>
+        </div>
+        <div class="cycle-time-summary">
+          <div class="tiles" id="cycle-time-kpi"></div>
+          <label class="cycle-time-cleanup-toggle" for="cycle-time-exclude-cleanup">
+            <input type="checkbox" id="cycle-time-exclude-cleanup">
+            Exclude detected cleanup outliers from metrics
+          </label>
+        </div>
+        <div class="chart-nav">
+          <button type="button" class="chart-nav-btn" id="cycle-time-prev" aria-label="Show earlier dates">‹</button>
+          <span class="chart-nav-range" id="cycle-time-range"></span>
+          <button type="button" class="chart-nav-btn" id="cycle-time-next" aria-label="Show later dates">›</button>
+        </div>
+        <div class="chart-box chart-box-cycle-time"><canvas id="chart-cycle-time-scatter"></canvas></div>
+        <div id="cycle-time-cleanup-banner"></div>
+        <div class="metric-legend" id="cycle-time-metric-legend"></div>
+        <div class="monthly-table-section">
+          <h3>Monthly P50 / P85</h3>
+          <div class="monthly-table-wrap" id="cycle-time-monthly-table"></div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-branch-creators" data-accent="figma" aria-label="Branch creators treemap">
+        <div class="panel-head">
+          <div>
+            <h2>Branch creators</h2>
+            <p class="panel-sub">Closed branches created in 2026 or later in the Pintxo Design System file, grouped by who created them — box size and shade both scale with branch count</p>
+          </div>
+        </div>
+        <div class="treemap-summary">
+          <ul class="metric-bullets" id="branch-creators-kpi"></ul>
+        </div>
+        <div class="chart-box chart-box-xl treemap-box" id="branch-creators-treemap"></div>
+        <div class="aging-branch-details" id="branch-creators-details" hidden></div>
+      </section>
+
+      <section class="panel" id="panel-library-branches" data-accent="figma" aria-label="Figma library branches">
+        <div class="panel-head">
+          <div>
+            <h2>Library branches</h2>
+            <p class="panel-sub">Branches in the Pintxo Design System Figma file</p>
+          </div>
+        </div>
+        <div class="branch-toolbar">
+          <label class="branch-filter">
+            <input type="checkbox" id="branch-filter-hide-merged" />
+            Hide closed branches
+          </label>
+          <label class="branch-per-page">
+            Show
+            <select id="branches-per-page">
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="200">200</option>
+            </select>
+            per page
+          </label>
+        </div>
+        <div id="branches-list" class="branch-list"></div>
+        <div class="chart-nav branches-nav">
+          <button type="button" class="chart-nav-btn" id="branches-prev" aria-label="Previous page">‹</button>
+          <span class="chart-nav-range" id="branches-page-label"></span>
+          <button type="button" class="chart-nav-btn" id="branches-next" aria-label="Next page">›</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <p>Data refreshes hourly via a scheduled GitHub Action. Source: <code>data/history.jsonl</code>.</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.1/chart.umd.min.js"></script>
+  <script src="cycle-time-math.js"></script>
+  <script src="cycle-time-scatter.js"></script>
+  <script src="aging-buckets-math.js"></script>
+  <script src="aging-buckets-waffle.js"></script>
+  <script src="aging-history-math.js"></script>
+  <script src="aging-history-chart.js"></script>
+  <script src="branch-creators-math.js"></script>
+  <script src="branch-creators-treemap.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

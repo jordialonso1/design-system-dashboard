@@ -1322,39 +1322,8 @@ function syncFloatingControlsToTab(tabButtonId) {
 }
 
 function initTabs() {
-  const tabs = [
-    { button: document.getElementById("tab-overview"), panel: document.getElementById("panel-overview") },
-    { button: document.getElementById("tab-branches"), panel: document.getElementById("panel-branches") },
-  ];
-
-  const initiallySelected = tabs.find(({ button }) => button.getAttribute("aria-selected") === "true");
-  if (initiallySelected) syncFloatingControlsToTab(initiallySelected.button.id);
-
-  tabs.forEach(({ button, panel }) => {
-    button.addEventListener("click", () => {
-      tabs.forEach(({ button: b, panel: p }) => {
-        const active = b === button;
-        b.setAttribute("aria-selected", String(active));
-        p.hidden = !active;
-      });
-      syncFloatingControlsToTab(button.id);
-
-      // Chart.js measures its canvas's container to size itself. That
-      // container has zero width while a panel is `hidden` — true for
-      // Overview the first time main() renders it, since Branches is the
-      // default open tab, and also reachable for Branches' own charts if
-      // they get destroyed/recreated (e.g. a theme toggle) while Overview
-      // is the visible tab — and Chart.js's ResizeObserver doesn't always
-      // pick up the change in time for the first paint after the panel
-      // becomes visible. resize() forces an immediate re-measure. Resize
-      // whichever panel just became visible, not just Overview's charts.
-      if (panel.id === "panel-overview") {
-        charts.forEach((c) => c.resize());
-      } else if (panel.id === "panel-branches") {
-        [branchActivityChart, cycleTimeScatterChart, agingHistoryChart].forEach((c) => c?.resize());
-      }
-    });
-  });
+  // Branches is the only tab in this static copy.
+  syncFloatingControlsToTab("tab-branches");
 }
 
 function setWidgetIndexCollapsed(nav, toggle, collapsed) {
@@ -1441,9 +1410,9 @@ function initWidgetIndex() {
     link.addEventListener("click", () => {
       const tabButton = document.getElementById(link.dataset.tab);
       const target = document.getElementById(link.dataset.target);
-      if (!tabButton || !target) return;
+      if (!target) return;
 
-      if (tabButton.getAttribute("aria-selected") !== "true") {
+      if (tabButton && tabButton.getAttribute("aria-selected") !== "true") {
         tabButton.click();
         // The tab-switch handler flips `hidden` synchronously, but the
         // panel's layout (and therefore scrollIntoView's target position)
@@ -1792,7 +1761,6 @@ function applyTheme(theme) {
     // Private browsing / storage disabled — theme just won't persist.
   }
   if (cachedHistory) {
-    renderCharts(cachedHistory);
     renderBranchActivity(cachedHistory);
     renderCycleTimeScatterChart(cachedHistory);
     // Aging history is a Chart.js chart again (unlike the waffle below),
@@ -1850,8 +1818,6 @@ async function main() {
   const latest = history.at(-1);
   document.getElementById("updated").textContent = `Last updated ${fmtDate(latest.timestamp)}`;
 
-  renderTiles(history);
-  renderCharts(history);
   renderBranches(history);
   renderBranchActivity(history);
   renderAgingBuckets(history);

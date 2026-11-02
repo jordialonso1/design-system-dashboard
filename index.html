@@ -36,13 +36,6 @@
       <span class="widget-index-toggle-label">Jump to</span>
     </button>
     <div class="widget-index-list" id="widget-index-list">
-      <div class="widget-index-tab-group" data-tab-group="tab-overview" hidden>
-        <p class="widget-index-group">Overview</p>
-        <button type="button" class="widget-index-link" data-tab="tab-overview" data-target="tiles">Current metrics</button>
-        <button type="button" class="widget-index-link" data-tab="tab-overview" data-target="panel-library-size">Library size</button>
-        <button type="button" class="widget-index-link" data-tab="tab-overview" data-target="panel-open-work">Open work</button>
-        <button type="button" class="widget-index-link" data-tab="tab-overview" data-target="panel-meeting-load">Meeting load</button>
-      </div>
       <div class="widget-index-tab-group" data-tab-group="tab-branches">
         <p class="widget-index-group">Branches</p>
         <button type="button" class="widget-index-link" data-tab="tab-branches" data-target="panel-branch-activity">Branch activity</button>
@@ -67,95 +60,8 @@
   </header>
 
   <main>
-    <nav class="tabs" role="tablist" aria-label="Dashboard sections">
-      <button
-        class="tab"
-        id="tab-branches"
-        type="button"
-        role="tab"
-        aria-selected="true"
-        aria-controls="panel-branches"
-      >Branches</button>
-      <button
-        class="tab"
-        id="tab-overview"
-        type="button"
-        role="tab"
-        aria-selected="false"
-        aria-controls="panel-overview"
-      >Overview</button>
-    </nav>
 
-    <div id="panel-overview" class="tab-panel" role="tabpanel" aria-labelledby="tab-overview" hidden>
-      <div class="banner banner-warning" id="wip-banner" role="note">
-        <span class="banner-icon" aria-hidden="true">⚠</span>
-        <p>WIP</p>
-      </div>
-
-      <section class="tiles" id="tiles" aria-label="Current metrics"></section>
-
-      <section class="panel" id="panel-library-size" data-accent="figma" aria-label="Component and style count over time">
-        <div class="panel-head">
-          <span class="dot" aria-hidden="true"></span>
-          <div>
-            <h2>Library size</h2>
-            <p class="panel-sub">Published components and styles, from Figma</p>
-          </div>
-        </div>
-        <div class="split-charts split-charts-3">
-          <div class="split-chart">
-            <p class="split-label">Components</p>
-            <p class="split-value" id="value-figma-components">—</p>
-            <div class="chart-box chart-box-sm"><canvas id="chart-figma-components"></canvas></div>
-          </div>
-          <div class="split-chart">
-            <p class="split-label">Styles</p>
-            <p class="split-value" id="value-figma-styles">—</p>
-            <div class="chart-box chart-box-sm"><canvas id="chart-figma-styles"></canvas></div>
-          </div>
-          <div class="split-chart">
-            <p class="split-label">Icons &amp; other assets</p>
-            <p class="split-value" id="value-figma-icon-assets">—</p>
-            <div class="chart-box chart-box-sm"><canvas id="chart-figma-icon-assets"></canvas></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel" id="panel-open-work" data-accent="jira" aria-label="Jira issue trend">
-        <div class="panel-head">
-          <span class="dot" aria-hidden="true"></span>
-          <div>
-            <h2>Open work</h2>
-            <p class="panel-sub">Open issues vs. issues resolved in the trailing 7 days</p>
-          </div>
-        </div>
-        <div class="split-charts">
-          <div class="split-chart">
-            <p class="split-label">Open issues</p>
-            <p class="split-value" id="value-jira-open">—</p>
-            <div class="chart-box chart-box-sm"><canvas id="chart-jira-open"></canvas></div>
-          </div>
-          <div class="split-chart">
-            <p class="split-label">Resolved (7d)</p>
-            <p class="split-value" id="value-jira-resolved">—</p>
-            <div class="chart-box chart-box-sm"><canvas id="chart-jira-resolved"></canvas></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel" id="panel-meeting-load" data-accent="calendar" aria-label="Meeting load trend">
-        <div class="panel-head">
-          <span class="dot" aria-hidden="true"></span>
-          <div>
-            <h2>Meeting load</h2>
-            <p class="panel-sub">Hours spent in design-system meetings, trailing 7 days</p>
-          </div>
-        </div>
-        <div class="chart-box chart-box-lg"><canvas id="chart-calendar"></canvas></div>
-      </section>
-    </div>
-
-    <div id="panel-branches" class="tab-panel" role="tabpanel" aria-labelledby="tab-branches">
+    <div id="panel-branches" class="tab-panel" role="tabpanel">
       <section class="panel" id="panel-branch-activity" data-accent="figma" aria-label="Branch creation and merge activity">
         <div class="panel-head">
           <div>
